@@ -50,30 +50,29 @@ $(document).ready(function(){ // jQuery has loaded and the DOM is ready to manip
     async function bubble_sort() {
 
         let elements = [];
-        console.log($("#chart .bar:not(.sorted)").length);
-        $("#chart .bar:not(.sorted)").each(async function(){
+
+        $("#chart .bar").each(async function(){
             elements.push($(this));
         })
         
+        // use for of loop so await works as expected
         for (const element of elements) {
 
             let $cur_bar  = element, 
-                $next_bar = $cur_bar.next(".bar:not(.sorted)");
+                $next_bar = $cur_bar.next();
         
             // this is the last element.
-            // if ($next_bar.length === 0) {
-            //     $cur_bar.addClass("sorted");
-            //     console.log("here");
-            //     return;
-            // }
+            if ($next_bar.length === 0) {
+                return;
+            }
 
             $cur_bar.addClass("red");
             $next_bar.addClass("red");
 
             await timeout();
 
-            let this_value = $cur_bar.attr("data-value"),
-                next_value = $next_bar.attr("data-value");
+            let this_value = parseInt($cur_bar.attr("data-value")),
+                next_value = parseInt($next_bar.attr("data-value"));
 
             // this bar is bigger than the next. swap them.
             if (this_value > next_value) {
@@ -91,17 +90,24 @@ $(document).ready(function(){ // jQuery has loaded and the DOM is ready to manip
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    let stop = false;
+    let interval = 0;
+
     $(".bubble_sort").on("click", function name() {
-        let interval = setInterval(()=>{
-            bubble_sort();
-        }, 100)
-        
-        setTimeout(()=>{
+
+        if (stop) {
             clearInterval(interval);
-        }, 1000)
+        }else{
+            interval = setInterval(()=>{
+                            bubble_sort();
+                        }, 100)
+        }
+
+        stop = !stop;
+
     })
 
-    const data = shuffleArray(generate_number_array(10,50));
+    const data = shuffleArray(generate_number_array(10,150));
     generate_bar_graph(data);
 
 });
