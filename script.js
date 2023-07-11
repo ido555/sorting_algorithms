@@ -69,7 +69,7 @@ $(document).ready(function(){ // jQuery has loaded and the DOM is ready to manip
             $cur_bar.addClass("red");
             $next_bar.addClass("red");
 
-            await timeout();
+            await timeout(0);
 
             let this_value = parseInt($cur_bar.attr("data-value")),
                 next_value = parseInt($next_bar.attr("data-value"));
@@ -100,14 +100,18 @@ $(document).ready(function(){ // jQuery has loaded and the DOM is ready to manip
         }else{
             interval = setInterval(()=>{
                             bubble_sort();
-                        }, 100)
+                        }, 50)
         }
 
         stop = !stop;
 
     })
 
-    const data = shuffleArray(generate_number_array(10,150));
+    $(".test_button").click(function () { 
+        generate_bar_graph(data);
+    });
+
+    const data = shuffleArray(generate_number_array(5,55));
     generate_bar_graph(data);
 
 });
